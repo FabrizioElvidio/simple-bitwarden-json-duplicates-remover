@@ -33,6 +33,8 @@ def remove_duplicates(dict_list_to_correct: list[dict], fields_to_ignore_in_dict
         to_compare = copy.deepcopy(d)
         for field in fields_to_ignore_in_dict:
             del to_compare[field]
+        if to_compare["login"]["uris"][0]["uri"][-1] == "/":
+            to_compare["login"]["uris"][0]["uri"] = to_compare["login"]["uris"][0]["uri"][:-1]
         if hash_dict(to_compare) in all_hashes:
             count_removed += 1
         else:
@@ -61,7 +63,7 @@ if __name__ == "__main__":
     if_ignore = input("Do you want to specify fields to ignore? (y/n) ")
     fields_to_ignore = None
     if if_ignore != "y":
-        fields_to_ignore = ["id", "creationDate", "revisionDate"]
+        fields_to_ignore = ["id", "creationDate", "revisionDate", "folderId"]
     else:
         fields_to_ignore = []
         while True:
@@ -86,6 +88,7 @@ if __name__ == "__main__":
 
     with open("file_checked.json", "w") as f:
         json.dump(full_dict, f, indent=2)
+        print("file_checked.json has been written in script directory")
 
     # Output the results
     print(f"Number of deleted logins: {deleted_count}")
